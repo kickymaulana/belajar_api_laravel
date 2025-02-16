@@ -8,22 +8,22 @@ uses(RefreshDatabase::class);
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-it('test register success', function () {
+test('test register harus sukses', function () {
     $this->postJson('/api/user', [
-        'username' => 'khannedy',
-        'password' => 'rahasia',
-        'name' => 'Eko Kurniawan khannedy'
+        'username' => 'kickymaulana',
+        'password' => 'passwordmu',
+        'name' => 'Kicky Maulana'
     ])->assertStatus(201)
         ->assertJson([
             'data' => [
-                'username' => 'khannedy',
-                'name' => 'Eko Kurniawan khannedy'
+                'username' => 'kickymaulana',
+                'name' => 'Kicky Maulana'
             ]
         ]);
 });
 
 
-test('test register failed', function () {
+test('test register harus gagal', function () {
 
     $this->postJson('/api/user', [
         'username' => '',
@@ -39,12 +39,12 @@ test('test register failed', function () {
         ]);
 });
 
-test('test register username already exists', function () {
+test('test register harusnya username udah ada', function () {
 
     $this->postJson('/api/user', [
-        'username' => 'khannedy',
-        'password' => 'rahasia',
-        'name' => 'Eko Kurniawan khannedy'
+        'username' => 'kickymaulana',
+        'password' => 'passwordmu',
+        'name' => 'Kicky Maulana'
     ])->assertStatus(201);
 
     $this->postJson('/api/user', [
@@ -61,7 +61,7 @@ test('test register username already exists', function () {
         ]);
 });
 
-test('test login success', function () {
+test('test login harus suskes', function () {
 
     $this->seed([UserSeeder::class]);
 
@@ -84,7 +84,7 @@ test('test login success', function () {
 
 });
 
-test('test login failed username not found', function () {
+test('test login gagal karena user tidak tersedia', function () {
 
     $this->postJson('/api/user/login', [
         'username' => 'test',
