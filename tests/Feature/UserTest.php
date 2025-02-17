@@ -245,6 +245,9 @@ test('logout success', function () {
         'data' => true
     ]);
 
+    $user = User::where('username', 'test')->first();
+    self::assertNull($user->token);
+
 
 });
 
