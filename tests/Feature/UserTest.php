@@ -1,6 +1,7 @@
 
 <?php
 use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -97,6 +98,62 @@ test('test login gagal karena user tidak tersedia', function () {
                 ]
             ]
         ]);
+});
 
+test('test get current test success', function () {
+
+    $this->seed([UserSeeder::class]);
+
+
+    $response = $this->withHeaders([
+        'Authorization' => 'test'
+    ])->get('/api/user/current');
+
+    $response->assertStatus(200)->assertJson([
+        'data' => [
+            'username' => 'test',
+            'name' => 'test'
+        ]
+
+    ]);
+
+});
+
+test('test get unauthorized', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $response = $this->get('/api/user/current');
+
+    $response->assertStatus(401);
+    $response->assertJson([
+        'errors' => [
+            'message' => [
+                'unauthorized'
+            ],
+        ]
+
+    ]);
+
+});
+
+test('test get invalid token', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $response = $this->withHeaders([
+        'Authorization' => 'salah'
+
+    ])->get('/api/user/current');
+
+    $response->assertStatus(401);
+    $response->assertJson([
+        'errors' => [
+            'message' => [
+                'unauthorized'
+            ],
+        ]
+
+    ]);
 
 });
