@@ -231,3 +231,39 @@ test('test update failed', function () {
         ]
     ]);
 });
+
+test('logout success', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $response = $this->withHeaders([
+        'Authorization' => 'test'
+    ])->delete('/api/user/logout');
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'data' => true
+    ]);
+
+
+});
+
+test('logout failed', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $response = $this->withHeaders([
+        'Authorization' => 'salah'
+    ])->delete('/api/user/logout');
+
+    $response->assertStatus(401);
+    $response->assertJson([
+        'errors' => [
+            'message' => [
+                'unauthorized'
+            ]
+        ]
+    ]);
+
+
+});
