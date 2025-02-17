@@ -157,3 +157,77 @@ test('test get invalid token', function () {
     ]);
 
 });
+
+test('test update name success', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $oldUser = User::where('username', 'test')->first();
+
+    $response = $this->withHeaders([
+        'Authorization' => 'test'
+
+    ])->patch('/api/user/current', [
+            'name' => 'baru'
+        ]);
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'data' => [
+            'username' => 'test',
+            'name' => 'baru'
+        ]
+    ]);
+
+    $newUser = User::where('username', 'test')->first();
+    self::assertNotEquals($oldUser->name, $newUser->name);
+
+});
+
+test('test update password success', function () {
+
+    $this->seed([UserSeeder::class]);
+
+    $oldUser = User::where('username', 'test')->first();
+
+    $response = $this->withHeaders([
+        'Authorization' => 'test'
+
+    ])->patch('/api/user/current', [
+            'password' => 'baru'
+        ]);
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'data' => [
+            'username' => 'test',
+            'name' => 'test'
+        ]
+    ]);
+
+    $newUser = User::where('username', 'test')->first();
+    self::assertNotEquals($oldUser->password, $newUser->password);
+
+});
+
+test('test update failed', function () {
+
+    $this->seed([UserSeeder::class]);
+
+
+    $response = $this->withHeaders([
+        'Authorization' => 'test'
+
+    ])->patch('/api/user/current', [
+            'name' => 'barubbarusdkvkdfkdfkdfkdfkdfjdfkdfkdkfdkfdbarubvarubarubarubaraubaraubaraubaraubarubaraubaraubaraubaraubarabuarabaurabaruabaruabaraubaraubarabuarabaura'
+        ]);
+
+    $response->assertStatus(400);
+    $response->assertJson([
+        'errors' => [
+            'name' => [
+                'The name field must not be greater than 100 characters.'
+            ]
+        ]
+    ]);
+});

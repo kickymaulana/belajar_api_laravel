@@ -29,9 +29,7 @@ class ApiAuthMiddleware
         if (!$user) {
             $authenticate = false;
         } else {
-
             Auth::login($user);
-
         }
 
         if ($authenticate) {
