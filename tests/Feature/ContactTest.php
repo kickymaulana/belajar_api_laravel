@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Contact;
+use Database\Seeders\ContactSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -73,4 +75,73 @@ test('create Anauthorize', function () {
             ]
         ]
     ]);
+});
+
+test('test get success', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts/'.$contacts->id);
+
+    $response->assertStatus(200);
+
+    $response->assertJson([
+        'data' => [
+            'first_name' => 'test',
+            'last_name' => 'test',
+            'email' => 'test@pzn.com',
+            'phone' => '08210821',
+        ]
+    ]);
+
+});
+
+
+test('test get contact tidak ketemu', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts/'.($contacts->id + 1));
+
+    $response->assertStatus(404);
+
+    $response->assertJson([
+        'errors' => [
+            'messages' => [
+                'not found'
+            ],
+        ]
+    ]);
+
+});
+
+
+test('test ambil contact punya orang lain', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test2']);
+
+    $response = $this->get('/api/contacts/'.($contacts->id + 1));
+
+    $response->assertStatus(404);
+
+    $response->assertJson([
+        'errors' => [
+            'messages' => [
+                'not found'
+            ],
+        ]
+    ]);
+
 });
