@@ -4,8 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use Database\Seeders\ContactSeeder;
+use Database\Seeders\SearchSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
+
+use function GuzzleHttp\json_encode;
 
 uses(RefreshDatabase::class);
 
@@ -238,5 +242,35 @@ test('test delete not found', function () {
             ]
         ]
     ]);
+
+});
+
+test('test search by first name', function () {
+
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?name=first');
+
+    #$response->assertStatus(200);
+
+    $response->json();
+
+    Log::info(json_encode($response));
+
+    $response = $this->assertEquals(10, count($response['data']));
+
+});
+
+test('test search by email', function () {
+
+});
+
+test('test search by phone', function () {
+
+});
+
+test('test search with page', function () {
 
 });
