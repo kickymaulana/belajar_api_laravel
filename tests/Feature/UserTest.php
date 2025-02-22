@@ -33,9 +33,15 @@ test('test register harus gagal', function () {
     ])->assertStatus(400)
         ->assertJson([
             'errors' => [
-                'The username field is required.',
-                'The password field is required.',
-                'The name field is required.'
+                'username' => [
+                    'The username field is required.',
+                ],
+                'password' => [
+                    'The password field is required.',
+                ],
+                'name' => [
+                    'The name field is required.'
+                ]
             ]
         ]);
 });
@@ -55,9 +61,15 @@ test('test register harusnya username udah ada', function () {
     ])->assertStatus(400)
         ->assertJson([
             'errors' => [
-                'The username field is required.',
-                'The password field is required.',
-                'The name field is required.'
+                'username' => [
+                    'The username field is required.',
+                ],
+                'password' => [
+                    'The password field is required.',
+                ],
+                'name' => [
+                    'The name field is required.'
+                ]
             ]
         ]);
 });
