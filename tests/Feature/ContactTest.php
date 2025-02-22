@@ -145,3 +145,59 @@ test('test ambil contact punya orang lain', function () {
     ]);
 
 });
+
+test('test update success', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->put('/api/contacts/'.$contacts->id, [
+            'first_name' => 'test2',
+            'last_name' => 'test2',
+            'email' => 'test2@pzn.com',
+            'phone' => '082108212',
+    ]);
+
+    $response->assertStatus(200);
+
+    $response->assertJson([
+        'data' => [
+            'first_name' => 'test2',
+            'last_name' => 'test2',
+            'email' => 'test2@pzn.com',
+            'phone' => '082108212',
+        ]
+    ]);
+
+});
+
+test('test update validation errors', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->put('/api/contacts/'.$contacts->id, [
+            'first_name' => '',
+            'last_name' => 'test2',
+            'email' => 'test2@pzn.com',
+            'phone' => '082108212',
+    ]);
+
+    $response->assertStatus(400);
+
+    $response->assertJson([
+        'errors' => [
+            'first_name' => [
+                'The first name field is required.'
+            ],
+        ]
+    ]);
+
+
+});
