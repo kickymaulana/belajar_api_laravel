@@ -115,7 +115,7 @@ test('test get contact tidak ketemu', function () {
 
     $response->assertJson([
         'errors' => [
-            'messages' => [
+            'message' => [
                 'not found'
             ],
         ]
@@ -138,7 +138,7 @@ test('test ambil contact punya orang lain', function () {
 
     $response->assertJson([
         'errors' => [
-            'messages' => [
+            'message' => [
                 'not found'
             ],
         ]
@@ -199,5 +199,44 @@ test('test update validation errors', function () {
         ]
     ]);
 
+});
+
+test('test delete success', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->delete('/api/contacts/'.$contacts->id);
+
+    $response->assertStatus(200);
+
+    $response->assertJson([
+        'data' => true
+    ]);
+
+});
+
+test('test delete not found', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class]);
+
+    $contacts = Contact::query()->limit(1)->first();
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->delete('/api/contacts/'.($contacts->id + 1));
+
+    $response->assertStatus(404);
+
+    $response->assertJson([
+        'errors' => [
+            'message' => [
+                'not found'
+            ]
+        ]
+    ]);
 
 });
