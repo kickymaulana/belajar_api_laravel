@@ -95,8 +95,8 @@ test('test get success', function () {
 
     $response->assertJson([
         'data' => [
-            'first_name' => 'test',
-            'last_name' => 'test',
+            'first_name' => 'first',
+            'last_name' => 'last',
             'email' => 'test@pzn.com',
             'phone' => '08210821',
         ]
@@ -253,11 +253,11 @@ test('test search by first name', function () {
 
     $response = $this->get('/api/contacts?name=first');
 
-    #$response->assertStatus(200);
+    $response->assertStatus(200);
 
     $response->json();
 
-    Log::info(json_encode($response));
+    Log::info(json_encode($response['data'], JSON_PRETTY_PRINT));
 
     $response = $this->assertEquals(10, count($response['data']));
 

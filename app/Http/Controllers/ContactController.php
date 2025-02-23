@@ -8,9 +8,9 @@ use App\Http\Resources\ContactCollection;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Client\Request;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
@@ -101,12 +101,13 @@ class ContactController extends Controller
         $contacts = Contact::query()->where('user_id', $user->id);
 
         $contacts = $contacts->where(function (Builder $builder) use ($request) {
+
             $name = $request->input('name');
+
             if ($name) {
                 $builder->where(function (Builder $builder) use ($name) {
                     $builder->orWhere('first_name', 'LIKE', '%'.$name.'%');
                     $builder->orWhere('last_name', 'LIKE', '%'.$name.'%');
-
                 });
             }
 

@@ -18,10 +18,10 @@ class SearchSeeder extends Seeder
 
         for ($i = 0; $i < 20 ; $i++) {
             Contact::create([
-                'last_name' => 'first ' .$i,
-                'first_name' => 'last ' .$i,
+                'first_name' => 'first ' .$i,
+                'last_name' => 'last ' .$i,
                 'email' => 'test' .$i.'@pzn.com',
-                'phone' => '1111'.$i,
+                'phone' => '11111'.$i,
                 'user_id' => $user->id,
             ]);
         }
