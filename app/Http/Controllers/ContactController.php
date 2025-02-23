@@ -123,7 +123,6 @@ class ContactController extends Controller
         });
 
         $contacts = $contacts->paginate(perPage: $size, page: $page);
-
         return new ContactCollection($contacts);
     }
 }

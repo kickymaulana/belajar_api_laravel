@@ -255,9 +255,8 @@ test('test search by first name', function () {
 
     $response->assertStatus(200);
 
-    $response->json();
 
-    Log::info(json_encode($response['data'], JSON_PRETTY_PRINT));
+    Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
 
     $response = $this->assertEquals(10, count($response['data']));
 
