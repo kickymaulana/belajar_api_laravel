@@ -256,20 +256,96 @@ test('test search by first name', function () {
     $response->assertStatus(200);
 
 
-    Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
+    //Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
 
-    $response = $this->assertEquals(10, count($response['data']));
+    // dd($response['meta']['total']);
+    $response = $this->assertEquals(20, $response['meta']['total']);
+
+});
+
+test('test search by last name', function () {
+
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?last=first');
+
+    $response->assertStatus(200);
+
+
+    //Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
+
+    // dd($response['meta']['total']);
+    $response = $this->assertEquals(20, $response['meta']['total']);
 
 });
 
 test('test search by email', function () {
 
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?email=test');
+
+    $response->assertStatus(200);
+
+
+    //Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
+
+    // dd($response['meta']['total']);
+    $response = $this->assertEquals(20, $response['meta']['total']);
+
+
 });
 
 test('test search by phone', function () {
 
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?phone=11111');
+
+    $response->assertStatus(200);
+
+
+    //Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
+
+    // dd($response['meta']['total']);
+    $response = $this->assertEquals(20, $response['meta']['total']);
+
+});
+
+
+test('test search not found', function () {
+
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?name=tidakada');
+
+    $response->assertStatus(200);
+
+    $response = $this->assertEquals(0, $response['meta']['total']);
+
 });
 
 test('test search with page', function () {
+
+
+    $this->seed([UserSeeder::class, SearchSeeder::class]);
+
+    $response = $this->withHeaders(['Authorization' => 'test']);
+
+    $response = $this->get('/api/contacts?size=5&page=2');
+
+    Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
+
+    $response->assertStatus(200);
+
+    $response = $this->assertEquals(5, count($response['data']));
 
 });
