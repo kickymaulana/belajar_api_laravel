@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Address;
 use App\Models\Contact;
+use Database\Seeders\AddressSeeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -79,4 +81,37 @@ test('test create contact not found', function () {
             ]
         ]
     ]);
+});
+
+test('test get success', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class, AddressSeeder::class]);
+    $address = Address::query()->limit(1)->first();
+    $response = $this->withHeaders(['Authorization' => 'test'])->get('/api/contacts/'.$address->contact_id.'/addresses/'.$address->id);
+    $response->assertStatus(200);
+    $response->assertJson([
+        'data' => [
+            'street' => 'test',
+            'city' => 'test',
+            'province' => 'test',
+            'country' => 'test',
+            'postal_code' => '11111'
+        ]
+    ]);
+});
+
+test('test get not found', function () {
+
+    $this->seed([UserSeeder::class, ContactSeeder::class, AddressSeeder::class]);
+    $address = Address::query()->limit(1)->first();
+    $response = $this->withHeaders(['Authorization' => 'test'])->get('/api/contacts/'.$address->contact_id.'/addresses/'.($address->id + 1));
+    $response->assertStatus(404);
+    $response->assertJson([
+        'errors' => [
+            'message' => [
+                'not found'
+            ]
+        ]
+    ]);
+
 });
